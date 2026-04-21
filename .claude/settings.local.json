@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/c/Users/Ángel/Desktop/PROYECTO GMAO CALIDAD/backend/.venv/Scripts/python.exe *)",
+      "Bash(\"/c/Users/Ángel/Desktop/PROYECTO GMAO CALIDAD/backend/.venv/Scripts/pip.exe\" list)",
+      "Bash(\"/c/Users/Ángel/Desktop/PROYECTO GMAO CALIDAD/backend/.venv/Scripts/pip.exe\" install djangorestframework-simplejwt bcrypt django-cors-headers drf-spectacular)",
+      "Bash(\"/c/Users/Ángel/Desktop/PROYECTO GMAO CALIDAD/backend/.venv/Scripts/pip.exe\" install pytest pytest-django factory-boy coverage ruff black)",
+      "Bash(python3 -c ' *)",
+      "Bash(DJANGO_SETTINGS_MODULE=gmao.settings.dev \".venv\\\\Scripts\\\\python.exe\" -m pytest --tb=short -q)",
+      "Bash(\".venv/Scripts/python.exe\" -c \"from apps.authentication.controllers.authentication_controller import RegisterController, LoginController; print\\('OK'\\)\")",
+      "Bash(set DJANGO_SETTINGS_MODULE=gmao.settings.dev)",
+      "Bash(\".venv/Scripts/python.exe\" manage.py check)",
+      "Bash(cmd /c \"npx tsc --noEmit 2>&1\")",
+      "Bash(\".venv/Scripts/pytest.exe\" --tb=short -q)",
+      "Bash(.venv/Scripts/python.exe -c ' *)"
+    ]
+  }
+}

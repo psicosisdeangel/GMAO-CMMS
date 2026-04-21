@@ -1,0 +1,11 @@
+Django>=5.0
+djangorestframework>=3.15
+djangorestframework-simplejwt
+bcrypt
+django-cors-headers
+drf-spectacular
+mysqlclient
+# Scheduler (choose one):
+# celery
+# redis
+# django-q2
