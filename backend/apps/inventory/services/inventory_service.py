@@ -1,5 +1,7 @@
 """Business logic for the inventory app."""
 
+from typing import Optional
+
 from django.db import transaction
 
 from apps.inventory.exceptions import (
@@ -57,8 +59,8 @@ class InventoryService:
         return sp
 
     @staticmethod
-    def list_spare_parts() -> "list[SparePart]":
-        return InventoryRepository.list_all()
+    def list_spare_parts(search: Optional[str] = None) -> "list[SparePart]":
+        return InventoryRepository.list_all(search=search)
 
     @staticmethod
     def decrement_stock(id_repuesto: int, cantidad: int) -> None:

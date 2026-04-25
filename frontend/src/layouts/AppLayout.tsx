@@ -11,12 +11,12 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { to: '/dashboard', label: 'Dashboard', icon: '📊', supervisorOnly: true },
-  { to: '/equipment', label: 'Equipos', icon: '🏭' },
-  { to: '/work-orders', label: 'Órdenes de Trabajo', icon: '📋' },
-  { to: '/inventory', label: 'Inventario', icon: '📦' },
-  { to: '/users', label: 'Usuarios', icon: '👥', supervisorOnly: true },
-  { to: '/audit', label: 'Auditoría', icon: '🔍', supervisorOnly: true },
+  { to: '/dashboard', label: 'Dashboard', icon: '', supervisorOnly: true },
+  { to: '/equipment', label: 'Equipos', icon: '' },
+  { to: '/work-orders', label: 'Ordenes de Trabajo', icon: '' },
+  { to: '/inventory', label: 'Inventario', icon: '' },
+  { to: '/users', label: 'Usuarios', icon: '', supervisorOnly: true },
+  { to: '/audit', label: 'Auditoria', icon: '', supervisorOnly: true },
 ];
 
 export const AppLayout: React.FC = () => {
@@ -52,7 +52,7 @@ export const AppLayout: React.FC = () => {
       <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <span className="sidebar-logo-icon">⚙</span>
+            <span className="sidebar-logo-icon">G</span>
             <div>
               <span className="sidebar-logo-text">GMAO</span>
               <span className="sidebar-logo-sub">Mantenimiento</span>
@@ -91,7 +91,7 @@ export const AppLayout: React.FC = () => {
             </div>
           </div>
           <button className="sidebar-logout" onClick={handleLogout}>
-            <span>⬅</span> Salir
+            Salir
           </button>
         </div>
       </aside>
@@ -105,7 +105,7 @@ export const AppLayout: React.FC = () => {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label="Toggle menu"
           >
-            ☰
+            Menu
           </button>
           <span className="topbar-title">GMAO</span>
           <span className="topbar-user">{user?.nombre_completo}</span>

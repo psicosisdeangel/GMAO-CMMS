@@ -86,3 +86,44 @@ class TestUserListCreateController:
         }
         response = supervisor_client.post("/api/users/", payload, format="json")
         assert response.status_code == status.HTTP_409_CONFLICT
+
+
+@pytest.mark.django_db
+class TestUserDetailController:
+    def test_get_user_success(self, supervisor_client, tecnico_user):
+        response = supervisor_client.get(f"/api/users/{tecnico_user.id}/")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["username"] == tecnico_user.username
+
+    def test_get_user_not_found(self, supervisor_client):
+        response = supervisor_client.get("/api/users/999999/")
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_patch_user_success(self, supervisor_client, tecnico_user):
+        response = supervisor_client.patch(
+            f"/api/users/{tecnico_user.id}/",
+            {"nombre_completo": "Nombre Actualizado"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["nombre_completo"] == "Nombre Actualizado"
+
+    def test_patch_user_not_found(self, supervisor_client):
+        response = supervisor_client.patch(
+            "/api/users/999999/",
+            {"nombre_completo": "X"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_delete_user_success(self, supervisor_client, tecnico_user):
+        response = supervisor_client.delete(f"/api/users/{tecnico_user.id}/")
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_delete_user_not_found(self, supervisor_client):
+        response = supervisor_client.delete("/api/users/999999/")
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_tecnico_cannot_access_detail(self, tecnico_client, tecnico_user):
+        response = tecnico_client.get(f"/api/users/{tecnico_user.id}/")
+        assert response.status_code == status.HTTP_403_FORBIDDEN

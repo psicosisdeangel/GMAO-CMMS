@@ -73,7 +73,7 @@ export const WorkOrderDetailPage: React.FC = () => {
     return (
       <div className="page">
         <Button variant="ghost" size="sm" onClick={() => navigate('/work-orders')} style={{ marginBottom: 16 }}>
-          ← Volver
+          Volver
         </Button>
         <Alert variant="error">Orden de trabajo no encontrada.</Alert>
       </div>
@@ -86,7 +86,7 @@ export const WorkOrderDetailPage: React.FC = () => {
     <div className="page">
       <div className="page-header">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/work-orders')}>← Volver</Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/work-orders')}>Volver</Button>
           <div>
             <h1 className="page-title">Orden #{wo.id_orden}</h1>
             <div className="flex items-center gap-2" style={{ marginTop: 4 }}>
@@ -98,12 +98,12 @@ export const WorkOrderDetailPage: React.FC = () => {
         <div className="page-actions">
           {wo.estado === 'PROGRAMADO' && (
             <Button variant="secondary" loading={startMutation.isPending} onClick={() => startMutation.mutate()}>
-              ▶ Iniciar Orden
+              Iniciar Orden
             </Button>
           )}
           {wo.estado === 'EN_PROCESO' && (
             <Button variant="success" onClick={() => setShowCloseModal(true)}>
-              ✓ Cerrar Orden
+              Cerrar Orden
             </Button>
           )}
         </div>
@@ -237,7 +237,7 @@ export const WorkOrderDetailPage: React.FC = () => {
                         style={{ width: 80 }}
                       />
                       <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{sp?.unidad_medida}</span>
-                      <Button variant="ghost" size="sm" onClick={() => setRepuestosUsados((prev) => prev.filter((x) => x.spare_part_id !== r.spare_part_id))}>✕</Button>
+                      <Button variant="ghost" size="sm" onClick={() => setRepuestosUsados((prev) => prev.filter((x) => x.spare_part_id !== r.spare_part_id))}>Quitar</Button>
                     </div>
                   );
                 })}

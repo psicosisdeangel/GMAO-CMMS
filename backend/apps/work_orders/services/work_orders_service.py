@@ -47,6 +47,9 @@ class WorkOrdersService:
                 "La fecha de inicio de un mantenimiento preventivo no puede ser en el pasado."
             )
 
+        if tipo == WorkOrder.Tipo.PREVENTIVO:
+            data["estado"] = WorkOrder.Estado.PROGRAMADO
+
         # REQ-04: Corrective order → starts EN_PROCESO, assigned to actor (if TECNICO)
         if tipo == WorkOrder.Tipo.CORRECTIVO:
             data["estado"] = WorkOrder.Estado.EN_PROCESO
@@ -124,10 +127,10 @@ class WorkOrdersService:
                 f"La orden {id_orden} ya está en estado {order.estado}."
             )
 
-        return WorkOrdersRepository.update(
-            order,
-            {"estado": WorkOrder.Estado.EN_PROCESO, "fk_tecnico_id": actor.id},
-        )
+        update_data: dict = {"estado": WorkOrder.Estado.EN_PROCESO}
+        if not order.fk_tecnico_id:
+            update_data["fk_tecnico_id"] = actor.id
+        return WorkOrdersRepository.update(order, update_data)
 
     # ────────────────────────────────────────── CLOSE ─────────────────────────
     @staticmethod

@@ -14,8 +14,8 @@ const workOrderSchema = z.object({
   descripcion: z.string().min(1, 'La descripción es obligatoria'),
   fecha_inicio: z.string().min(1, 'La fecha es obligatoria'),
   frecuencia: z.enum(['UNICA', 'MENSUAL', 'TRIMESTRAL', 'ANUAL']),
-  fk_equipo_id_id: z.string().min(1, 'Seleccione un equipo'),
-  fk_tecnico_id_id: z.string().optional(),
+  fk_equipo_id: z.string().min(1, 'Seleccione un equipo'),
+  fk_tecnico_id: z.string().optional(),
 });
 
 type WOFormData = z.infer<typeof workOrderSchema>;
@@ -55,8 +55,8 @@ export const WorkOrderForm: React.FC<WorkOrderFormProps> = ({
     defaultValues: {
       tipo: 'CORRECTIVO',
       frecuencia: 'UNICA',
-      fk_equipo_id_id: defaultEquipoId ?? '',
-      fk_tecnico_id_id: isSupervisor ? '' : String(user?.id ?? ''),
+      fk_equipo_id: defaultEquipoId ?? '',
+      fk_tecnico_id: isSupervisor ? '' : String(user?.id ?? ''),
     },
   });
 
@@ -94,8 +94,8 @@ export const WorkOrderForm: React.FC<WorkOrderFormProps> = ({
       descripcion: data.descripcion,
       fecha_inicio: data.fecha_inicio,
       frecuencia: data.frecuencia,
-      fk_equipo_id_id: data.fk_equipo_id_id,
-      fk_tecnico_id_id: data.fk_tecnico_id_id ? Number(data.fk_tecnico_id_id) : null,
+      fk_equipo_id: data.fk_equipo_id,
+      fk_tecnico_id: data.fk_tecnico_id ? Number(data.fk_tecnico_id) : null,
     };
     createMutation.mutate(payload);
   };
@@ -133,7 +133,7 @@ export const WorkOrderForm: React.FC<WorkOrderFormProps> = ({
         <label className="form-label">Equipo <span className="required">*</span></label>
         <select
           className={`form-select ${errors.fk_equipo_id ? 'form-input-error' : ''}`}
-          {...register('fk_equipo_id')}
+          {...register('fk_equipo_id', { required: 'Seleccione un equipo' })}
         >
           <option value="">Seleccionar equipo...</option>
           {equipmentData?.results.map((eq) => (
@@ -170,7 +170,7 @@ export const WorkOrderForm: React.FC<WorkOrderFormProps> = ({
         {isSupervisor && (
           <div className="form-group">
             <label className="form-label">Técnico Asignado</label>
-            <select className="form-select" {...register('fk_tecnico_id')}>
+            <select className="form-select" {...register('fk_tecnico_id', { required: false })}>
               <option value="">Sin asignar</option>
               {usersData?.results
                 .filter((u) => u.is_active)

@@ -48,7 +48,7 @@ export const Modal: React.FC<ModalProps> = ({
             onClick={onClose}
             aria-label="Cerrar"
           >
-            ✕
+            x
           </button>
         </div>
         <div className="modal-body">{children}</div>

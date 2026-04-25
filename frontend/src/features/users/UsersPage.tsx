@@ -144,7 +144,7 @@ export const UsersPage: React.FC = () => {
             {data?.results.length === 0 ? (
               <tr><td colSpan={6}>
                 <div className="empty-state">
-                  <div className="empty-state-icon">👥</div>
+                  <div className="empty-state-icon"></div>
                   <p className="empty-state-title">Sin usuarios registrados</p>
                 </div>
               </td></tr>
@@ -177,8 +177,8 @@ export const UsersPage: React.FC = () => {
           <div className="pagination">
             <span className="pagination-info">Página {page} de {totalPages}</span>
             <div className="pagination-controls">
-              <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>← Anterior</Button>
-              <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Siguiente →</Button>
+              <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Anterior</Button>
+              <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Siguiente</Button>
             </div>
           </div>
         )}

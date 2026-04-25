@@ -197,6 +197,100 @@ class TestUpdateWorkOrder:
 
 
 @pytest.mark.django_db
+class TestStartWorkOrder:
+    def test_start_programado_becomes_en_proceso(self, supervisor, equipment, future_date):
+        order = WorkOrdersService.create_work_order(
+            data={"tipo": "PREVENTIVO", "descripcion": "Start test",
+                  "fecha_inicio": future_date, "fk_equipo_id": equipment.id_unico,
+                  "fk_tecnico_id": supervisor.id},
+            actor=supervisor,
+        )
+        started = WorkOrdersService.start_work_order(id_orden=order.id_orden, actor=supervisor)
+        assert started.estado == "EN_PROCESO"
+
+    def test_start_preserves_assigned_tecnico(self, supervisor, tecnico, equipment, future_date):
+        order = WorkOrdersService.create_work_order(
+            data={"tipo": "PREVENTIVO", "descripcion": "Preservar tecnico",
+                  "fecha_inicio": future_date, "fk_equipo_id": equipment.id_unico,
+                  "fk_tecnico_id": tecnico.id},
+            actor=supervisor,
+        )
+        started = WorkOrdersService.start_work_order(id_orden=order.id_orden, actor=supervisor)
+        assert started.fk_tecnico_id == tecnico.id
+
+    def test_start_not_found_raises(self, supervisor):
+        from apps.work_orders.exceptions import WorkOrderNotFoundError
+        with pytest.raises(WorkOrderNotFoundError):
+            WorkOrdersService.start_work_order(id_orden=999999, actor=supervisor)
+
+    def test_start_cerrada_raises(self, supervisor, equipment):
+        from apps.work_orders.exceptions import WorkOrderClosedError
+        order = WorkOrdersService.create_work_order(
+            data={"tipo": "CORRECTIVO", "descripcion": "Cerrar",
+                  "fecha_inicio": timezone.now(), "fk_equipo_id": equipment.id_unico},
+            actor=supervisor,
+        )
+        WorkOrdersService.close_work_order(id_orden=order.id_orden, data={}, actor=supervisor)
+        with pytest.raises(WorkOrderClosedError):
+            WorkOrdersService.start_work_order(id_orden=order.id_orden, actor=supervisor)
+
+    def test_start_invalid_transition_raises(self, supervisor, equipment):
+        from apps.work_orders.exceptions import WorkOrderInvalidTransitionError
+        order = WorkOrdersService.create_work_order(
+            data={"tipo": "CORRECTIVO", "descripcion": "Ya en proceso",
+                  "fecha_inicio": timezone.now(), "fk_equipo_id": equipment.id_unico},
+            actor=supervisor,
+        )
+        with pytest.raises(WorkOrderInvalidTransitionError):
+            WorkOrdersService.start_work_order(id_orden=order.id_orden, actor=supervisor)
+
+
+@pytest.mark.django_db
+class TestGetListWorkOrder:
+    def test_get_work_order_not_found_raises(self):
+        from apps.work_orders.exceptions import WorkOrderNotFoundError
+        with pytest.raises(WorkOrderNotFoundError):
+            WorkOrdersService.get_work_order(id_orden=999999)
+
+    def test_list_supervisor_sees_all(self, supervisor, tecnico, equipment):
+        WorkOrder.objects.create(
+            tipo="CORRECTIVO", estado="EN_PROCESO", descripcion="WO1",
+            fecha_inicio=timezone.now(), fk_equipo=equipment, fk_tecnico=tecnico,
+        )
+        orders = WorkOrdersService.list_work_orders(actor=supervisor)
+        assert len(orders) >= 1
+
+    def test_list_tecnico_sees_only_own(self, supervisor, tecnico, equipment):
+        WorkOrder.objects.create(
+            tipo="CORRECTIVO", estado="EN_PROCESO", descripcion="TecOWN",
+            fecha_inicio=timezone.now(), fk_equipo=equipment, fk_tecnico=tecnico,
+        )
+        WorkOrder.objects.create(
+            tipo="CORRECTIVO", estado="EN_PROCESO", descripcion="SupOWN",
+            fecha_inicio=timezone.now(), fk_equipo=equipment, fk_tecnico=supervisor,
+        )
+        orders = WorkOrdersService.list_work_orders(actor=tecnico)
+        for o in orders:
+            assert o.fk_tecnico_id == tecnico.id
+
+    def test_get_equipment_history(self, supervisor, equipment):
+        WorkOrder.objects.create(
+            tipo="CORRECTIVO", estado="CERRADA", descripcion="Hist",
+            fecha_inicio=timezone.now(), fecha_cierre=timezone.now(),
+            fk_equipo=equipment, fk_tecnico=supervisor,
+        )
+        history = WorkOrdersService.get_equipment_history(equipo_id=equipment.id_unico)
+        assert len(history) >= 1
+
+    def test_update_work_order_not_found_raises(self, supervisor):
+        from apps.work_orders.exceptions import WorkOrderNotFoundError
+        with pytest.raises(WorkOrderNotFoundError):
+            WorkOrdersService.update_work_order(
+                id_orden=999999, data={"descripcion": "X"}, actor=supervisor
+            )
+
+
+@pytest.mark.django_db
 class TestRecurringOrders:
     def test_close_preventivo_recurring_generates_next(self, supervisor, equipment):
         """REQ-03: closing a MENSUAL preventivo generates next order."""

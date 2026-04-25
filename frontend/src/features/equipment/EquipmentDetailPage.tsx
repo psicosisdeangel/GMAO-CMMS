@@ -35,7 +35,7 @@ export const EquipmentDetailPage: React.FC = () => {
     return (
       <div className="page">
         <Button variant="ghost" size="sm" onClick={() => navigate('/equipment')} style={{ marginBottom: 16 }}>
-          ← Volver
+          Volver
         </Button>
         <Alert variant="error">Equipo no encontrado o error al cargar.</Alert>
       </div>
@@ -46,7 +46,7 @@ export const EquipmentDetailPage: React.FC = () => {
     <div className="page">
       <div className="page-header">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/equipment')}>← Volver</Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/equipment')}>Volver</Button>
           <div>
             <h1 className="page-title">{equipment.nombre}</h1>
             <p className="page-subtitle font-mono">{equipment.id_unico}</p>
@@ -112,7 +112,7 @@ export const EquipmentDetailPage: React.FC = () => {
             <div style={{ padding: 20 }}><Spinner size="sm" /></div>
           ) : history?.results.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-icon">📋</div>
+              <div className="empty-state-icon"></div>
               <p className="empty-state-title">Sin historial</p>
               <p className="empty-state-text">No hay órdenes de trabajo para este equipo.</p>
             </div>

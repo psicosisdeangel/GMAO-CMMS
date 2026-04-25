@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from django.db.models import F
+from django.db.models import F, Q
 
 from apps.inventory.models import SparePart
 
@@ -17,8 +17,11 @@ class InventoryRepository:
         return SparePart.objects.filter(codigo=codigo).first()
 
     @staticmethod
-    def list_all() -> "list[SparePart]":
-        return list(SparePart.objects.all().order_by("nombre"))
+    def list_all(search: Optional[str] = None) -> "list[SparePart]":
+        qs = SparePart.objects.all().order_by("nombre")
+        if search:
+            qs = qs.filter(Q(nombre__icontains=search) | Q(codigo__icontains=search))
+        return list(qs)
 
     @staticmethod
     def create(data: dict) -> SparePart:

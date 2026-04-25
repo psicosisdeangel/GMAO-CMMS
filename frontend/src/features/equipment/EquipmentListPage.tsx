@@ -116,7 +116,7 @@ export const EquipmentListPage: React.FC = () => {
               <tr>
                 <td colSpan={7}>
                   <div className="empty-state">
-                    <div className="empty-state-icon">🏭</div>
+                    <div className="empty-state-icon"></div>
                     <p className="empty-state-title">Sin equipos registrados</p>
                     <p className="empty-state-text">
                       {isSupervisor ? 'Cree el primer equipo pulsando "+ Nuevo Equipo"' : 'No hay equipos disponibles.'}
@@ -171,10 +171,10 @@ export const EquipmentListPage: React.FC = () => {
             </span>
             <div className="pagination-controls">
               <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-                ← Anterior
+                Anterior
               </Button>
               <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
-                Siguiente →
+                Siguiente
               </Button>
             </div>
           </div>

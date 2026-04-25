@@ -88,3 +88,68 @@ class TestEquipmentDetail:
             format="json",
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_get_detail_success(self, supervisor_client, equipment_payload):
+        supervisor_client.post("/api/equipment/", equipment_payload, format="json")
+        response = supervisor_client.get("/api/equipment/EQ-CTRL-001/")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["id_unico"] == "EQ-CTRL-001"
+
+    def test_get_detail_not_found(self, supervisor_client):
+        response = supervisor_client.get("/api/equipment/GHOST-999/")
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_patch_equipment_success(self, supervisor_client, equipment_payload):
+        supervisor_client.post("/api/equipment/", equipment_payload, format="json")
+        response = supervisor_client.patch(
+            "/api/equipment/EQ-CTRL-001/",
+            {"nombre": "Bomba Actualizada"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["nombre"] == "Bomba Actualizada"
+
+    def test_patch_equipment_not_found(self, supervisor_client):
+        response = supervisor_client.patch(
+            "/api/equipment/GHOST-999/",
+            {"nombre": "X"},
+            format="json",
+        )
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_delete_equipment_success(self, supervisor_client, equipment_payload):
+        supervisor_client.post("/api/equipment/", equipment_payload, format="json")
+        response = supervisor_client.delete("/api/equipment/EQ-CTRL-001/")
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_delete_equipment_not_found(self, supervisor_client):
+        response = supervisor_client.delete("/api/equipment/GHOST-999/")
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_delete_equipment_with_active_orders_returns_409(self, supervisor_client, equipment_payload):
+        from apps.equipment.models import Equipment
+        from apps.work_orders.models import WorkOrder
+        from django.utils import timezone
+        supervisor_client.post("/api/equipment/", equipment_payload, format="json")
+        eq = Equipment.objects.get(id_unico="EQ-CTRL-001")
+        from apps.users.models import User
+        sup = User.objects.create_user(
+            username="eq_del_sup2", password="pass", nombre_completo="S", rol="SUPERVISOR"
+        )
+        WorkOrder.objects.create(
+            tipo="CORRECTIVO", estado="EN_PROCESO", descripcion="Activa",
+            fecha_inicio=timezone.now(), fk_equipo=eq, fk_tecnico=sup,
+        )
+        response = supervisor_client.delete("/api/equipment/EQ-CTRL-001/")
+        assert response.status_code == status.HTTP_409_CONFLICT
+
+    def test_list_with_search_filter(self, supervisor_client, equipment_payload):
+        supervisor_client.post("/api/equipment/", equipment_payload, format="json")
+        response = supervisor_client.get("/api/equipment/?search=Bomba")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["count"] >= 1
+
+    def test_tecnico_cannot_delete_equipment(self, tecnico_client, supervisor_client, equipment_payload):
+        supervisor_client.post("/api/equipment/", equipment_payload, format="json")
+        response = tecnico_client.delete("/api/equipment/EQ-CTRL-001/")
+        assert response.status_code == status.HTTP_403_FORBIDDEN

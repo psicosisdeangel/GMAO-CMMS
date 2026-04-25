@@ -169,7 +169,7 @@ export const WorkOrderListPage: React.FC = () => {
               <tr>
                 <td colSpan={7}>
                   <div className="empty-state">
-                    <div className="empty-state-icon">📋</div>
+                    <div className="empty-state-icon"></div>
                     <p className="empty-state-title">Sin órdenes de trabajo</p>
                     <p className="empty-state-text">Cree una nueva orden pulsando "+ Nueva Orden".</p>
                   </div>
@@ -226,10 +226,10 @@ export const WorkOrderListPage: React.FC = () => {
             <span className="pagination-info">Página {page} de {totalPages}</span>
             <div className="pagination-controls">
               <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-                ← Anterior
+                Anterior
               </Button>
               <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
-                Siguiente →
+                Siguiente
               </Button>
             </div>
           </div>
@@ -313,7 +313,7 @@ export const WorkOrderListPage: React.FC = () => {
                         style={{ width: 80 }}
                       />
                       <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{sp?.unidad_medida}</span>
-                      <Button variant="ghost" size="sm" onClick={() => handleRemoveRepuesto(r.spare_part_id)}>✕</Button>
+                      <Button variant="ghost" size="sm" onClick={() => handleRemoveRepuesto(r.spare_part_id)}>Quitar</Button>
                     </div>
                   );
                 })}

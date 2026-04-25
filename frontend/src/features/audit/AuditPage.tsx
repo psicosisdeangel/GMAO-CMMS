@@ -106,7 +106,7 @@ export const AuditPage: React.FC = () => {
             {data?.results.length === 0 ? (
               <tr><td colSpan={6}>
                 <div className="empty-state">
-                  <div className="empty-state-icon">🔍</div>
+                  <div className="empty-state-icon"></div>
                   <p className="empty-state-title">Sin registros de auditoría</p>
                 </div>
               </td></tr>
@@ -144,10 +144,10 @@ export const AuditPage: React.FC = () => {
             </span>
             <div className="pagination-controls">
               <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-                ← Anterior
+                Anterior
               </Button>
               <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
-                Siguiente →
+                Siguiente
               </Button>
             </div>
           </div>

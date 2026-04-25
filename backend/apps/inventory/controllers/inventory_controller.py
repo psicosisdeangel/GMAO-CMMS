@@ -29,7 +29,8 @@ class SparePartListCreateController(APIView):
 
     @extend_schema(responses=SparePartReadSerializer(many=True))
     def get(self, request: Request) -> Response:
-        parts = InventoryService.list_spare_parts()
+        search = request.query_params.get("search")
+        parts = InventoryService.list_spare_parts(search=search)
         paginator = PageNumberPagination()
         paginator.page_size = 20
         page = paginator.paginate_queryset(list(parts), request)

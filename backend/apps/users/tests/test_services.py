@@ -69,3 +69,28 @@ class TestUsersServiceDeactivate:
     def test_deactivate_nonexistent_raises(self, supervisor):
         with pytest.raises(UserNotFoundError):
             UsersService.deactivate_user(user_id=99999, actor=supervisor)
+
+
+class TestUsersServiceUpdate:
+    @pytest.mark.django_db
+    def test_update_user_success(self, valid_create_data, supervisor):
+        user = UsersService.create_user(data=valid_create_data, actor=supervisor)
+        updated = UsersService.update_user(
+            user_id=user.id,
+            data={"nombre_completo": "Nombre Nuevo"},
+            actor=supervisor,
+        )
+        assert updated.nombre_completo == "Nombre Nuevo"
+
+    @pytest.mark.django_db
+    def test_update_user_not_found_raises(self, supervisor):
+        with pytest.raises(UserNotFoundError):
+            UsersService.update_user(user_id=99999, data={"nombre_completo": "X"}, actor=supervisor)
+
+
+class TestUsersServiceList:
+    @pytest.mark.django_db
+    def test_list_users_returns_all(self, valid_create_data, supervisor):
+        UsersService.create_user(data=valid_create_data, actor=supervisor)
+        users = list(UsersService.list_users())
+        assert len(users) >= 1

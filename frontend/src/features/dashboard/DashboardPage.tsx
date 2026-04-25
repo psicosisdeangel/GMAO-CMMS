@@ -67,7 +67,7 @@ export const DashboardPage: React.FC = () => {
       {/* KPI Cards */}
       <div className="dashboard-grid">
         <div className="kpi-card kpi-card-primary">
-          <div className="kpi-icon">🏭</div>
+          <div className="kpi-icon"></div>
           <div className="kpi-content">
             <span className="kpi-label">Total Equipos</span>
             <span className="kpi-value">{dashboard?.total_equipos ?? 0}</span>
@@ -84,7 +84,7 @@ export const DashboardPage: React.FC = () => {
                   borderLeftColor: estadoColors[estado] || 'var(--color-primary)',
                 }}
               >
-                <div className="kpi-icon">📋</div>
+                <div className="kpi-icon"></div>
                 <div className="kpi-content">
                   <span className="kpi-label">
                     {estadoLabels[estado] || estado}

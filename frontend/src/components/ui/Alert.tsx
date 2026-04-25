@@ -20,10 +20,10 @@ export const Alert: React.FC<AlertProps> = ({
   style,
 }) => {
   const icons: Record<AlertVariant, string> = {
-    success: '✓',
-    error: '✕',
-    warning: '⚠',
-    info: 'ℹ',
+    success: 'OK',
+    error: 'Error',
+    warning: 'Aviso',
+    info: 'Info',
   };
 
   return (
@@ -39,7 +39,7 @@ export const Alert: React.FC<AlertProps> = ({
           onClick={onDismiss}
           aria-label="Cerrar"
         >
-          ✕
+          x
         </button>
       )}
     </div>

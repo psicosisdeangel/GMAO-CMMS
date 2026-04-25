@@ -74,3 +74,53 @@ class TestEquipmentServiceUpdate:
                 data={"nombre": "X"},
                 actor=supervisor,
             )
+
+
+@pytest.mark.django_db
+class TestEquipmentServiceDelete:
+    def test_delete_equipment_success(self, valid_equipment_data, supervisor):
+        EquipmentService.create_equipment(data=valid_equipment_data, actor=supervisor)
+        EquipmentService.delete_equipment(id_unico="EQ-001", actor=supervisor)
+        with pytest.raises(EquipmentNotFoundError):
+            EquipmentService.get_equipment("EQ-001")
+
+    def test_delete_nonexistent_raises(self, supervisor):
+        with pytest.raises(EquipmentNotFoundError):
+            EquipmentService.delete_equipment(id_unico="GHOST", actor=supervisor)
+
+    def test_delete_with_active_orders_raises(self, valid_equipment_data, supervisor):
+        from apps.equipment.exceptions import EquipmentHasActiveOrdersError
+        from apps.work_orders.models import WorkOrder
+        from django.utils import timezone
+
+        EquipmentService.create_equipment(data=valid_equipment_data, actor=supervisor)
+        from apps.equipment.models import Equipment
+        eq = Equipment.objects.get(id_unico="EQ-001")
+        WorkOrder.objects.create(
+            tipo="CORRECTIVO", estado="EN_PROCESO", descripcion="Activa",
+            fecha_inicio=timezone.now(), fk_equipo=eq, fk_tecnico=supervisor,
+        )
+        with pytest.raises(EquipmentHasActiveOrdersError):
+            EquipmentService.delete_equipment(id_unico="EQ-001", actor=supervisor)
+
+
+@pytest.mark.django_db
+class TestEquipmentServiceGet:
+    def test_get_equipment_not_found_raises(self):
+        with pytest.raises(EquipmentNotFoundError):
+            EquipmentService.get_equipment("GHOST")
+
+    def test_list_equipment_with_tipo_filter(self, valid_equipment_data, supervisor):
+        EquipmentService.create_equipment(data=valid_equipment_data, actor=supervisor)
+        result = list(EquipmentService.list_equipment(tipo="Compresor"))
+        assert any(e.id_unico == "EQ-001" for e in result)
+
+    def test_list_equipment_with_search_filter(self, valid_equipment_data, supervisor):
+        EquipmentService.create_equipment(data=valid_equipment_data, actor=supervisor)
+        result = list(EquipmentService.list_equipment(search="Compresor A"))
+        assert any(e.id_unico == "EQ-001" for e in result)
+
+    def test_list_equipment_with_ubicacion_filter(self, valid_equipment_data, supervisor):
+        EquipmentService.create_equipment(data=valid_equipment_data, actor=supervisor)
+        result = list(EquipmentService.list_equipment(ubicacion="Sala de máquinas"))
+        assert any(e.id_unico == "EQ-001" for e in result)
