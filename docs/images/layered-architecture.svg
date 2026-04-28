@@ -1,0 +1,100 @@
+<svg viewBox="0 0 880 820" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="larrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <marker id="laudit" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#e11d48"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="440" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Controller — Service — Repository (REQ-15)</text>
+  <text x="440" y="56" text-anchor="middle" font-size="13" fill="#64748b">Request flow through every Django app · No layer skipping</text>
+
+  <!-- HTTP Request -->
+  <rect x="340" y="80" width="200" height="44" rx="22" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="440" y="107" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">HTTP Request</text>
+
+  <line x1="440" y1="124" x2="440" y2="152" stroke="#475569" stroke-width="2" marker-end="url(#larrow)"/>
+
+  <!-- URL Router -->
+  <rect x="320" y="156" width="240" height="44" rx="6" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+  <text x="440" y="183" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">URL Router (urls.py)</text>
+
+  <line x1="440" y1="200" x2="440" y2="228" stroke="#475569" stroke-width="2" marker-end="url(#larrow)"/>
+
+  <!-- CONTROLLER -->
+  <rect x="180" y="232" width="520" height="100" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="200" y="256" font-size="11" font-weight="700" fill="#1e3a8a" letter-spacing="1">LAYER 1</text>
+  <text x="440" y="279" text-anchor="middle" font-size="17" font-weight="700" fill="#1e3a8a">Controller (DRF View)</text>
+  <text x="440" y="300" text-anchor="middle" font-size="12" fill="#1e3a8a">HTTP only · JWT validation · RBAC check · (de)serialization</text>
+  <text x="440" y="320" text-anchor="middle" font-size="11" fill="#1e3a8a" font-style="italic">No business logic · No direct ORM access</text>
+
+  <!-- Side: Serializer -->
+  <rect x="710" y="252" width="150" height="60" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="785" y="276" text-anchor="middle" font-size="12" font-weight="700" fill="#7c2d12">Serializer</text>
+  <text x="785" y="294" text-anchor="middle" font-size="10" fill="#7c2d12">Shape validation</text>
+  <text x="785" y="306" text-anchor="middle" font-size="10" fill="#7c2d12">Input / output</text>
+  <line x1="700" y1="282" x2="710" y2="282" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <!-- Side: Permissions -->
+  <rect x="20" y="252" width="150" height="60" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="95" y="276" text-anchor="middle" font-size="12" font-weight="700" fill="#7c2d12">Permission Class</text>
+  <text x="95" y="294" text-anchor="middle" font-size="10" fill="#7c2d12">HasRole(...)</text>
+  <text x="95" y="306" text-anchor="middle" font-size="10" fill="#7c2d12">REQ-08, REQ-10</text>
+  <line x1="170" y1="282" x2="180" y2="282" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <line x1="440" y1="332" x2="440" y2="362" stroke="#475569" stroke-width="2" marker-end="url(#larrow)"/>
+  <text x="450" y="352" font-size="10" fill="#475569" font-style="italic">validated_data + actor</text>
+
+  <!-- SERVICE -->
+  <rect x="180" y="366" width="520" height="115" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+  <text x="200" y="390" font-size="11" font-weight="700" fill="#14532d" letter-spacing="1">LAYER 2</text>
+  <text x="440" y="413" text-anchor="middle" font-size="17" font-weight="700" fill="#14532d">Service</text>
+  <text x="440" y="434" text-anchor="middle" font-size="12" fill="#14532d">Business logic · Domain validations · MTTR calculations</text>
+  <text x="440" y="452" text-anchor="middle" font-size="12" fill="#14532d">@transaction.atomic · Repository orchestration</text>
+  <text x="440" y="470" text-anchor="middle" font-size="11" fill="#14532d" font-style="italic">No HTTP knowledge · Raises domain exceptions</text>
+
+  <!-- AUDIT SERVICE (cross-cutting) -->
+  <rect x="710" y="380" width="150" height="90" rx="6" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+  <text x="785" y="403" text-anchor="middle" font-size="12" font-weight="700" fill="#9f1239">AuditService</text>
+  <text x="785" y="422" text-anchor="middle" font-size="10" fill="#9f1239">REQ-13</text>
+  <text x="785" y="438" text-anchor="middle" font-size="10" fill="#9f1239">Append-only log</text>
+  <text x="785" y="454" text-anchor="middle" font-size="10" fill="#9f1239">≥5 years retention</text>
+  <text x="785" y="466" text-anchor="middle" font-size="9" fill="#9f1239" font-style="italic">Cross-cutting</text>
+
+  <line x1="700" y1="425" x2="710" y2="425" stroke="#e11d48" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#laudit)"/>
+
+  <line x1="440" y1="481" x2="440" y2="510" stroke="#475569" stroke-width="2" marker-end="url(#larrow)"/>
+
+  <!-- REPOSITORY -->
+  <rect x="180" y="514" width="520" height="90" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+  <text x="200" y="538" font-size="11" font-weight="700" fill="#7c2d12" letter-spacing="1">LAYER 3</text>
+  <text x="440" y="561" text-anchor="middle" font-size="17" font-weight="700" fill="#7c2d12">Repository</text>
+  <text x="440" y="581" text-anchor="middle" font-size="12" fill="#7c2d12">Encapsulates Django ORM · get / create / update / list / queries</text>
+  <text x="440" y="598" text-anchor="middle" font-size="11" fill="#7c2d12" font-style="italic">No business rules · No permission checks</text>
+
+  <line x1="440" y1="604" x2="440" y2="634" stroke="#475569" stroke-width="2" marker-end="url(#larrow)"/>
+
+  <!-- MODEL -->
+  <rect x="280" y="638" width="320" height="56" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="440" y="660" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">Model (Django ORM)</text>
+  <text x="440" y="680" text-anchor="middle" font-size="11" fill="#4c1d95">Schema · constraints · indexes · FKs only</text>
+
+  <line x1="440" y1="694" x2="440" y2="724" stroke="#475569" stroke-width="2" marker-end="url(#larrow)"/>
+
+  <!-- DATABASE -->
+  <ellipse cx="440" cy="755" rx="140" ry="32" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="440" y="752" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">MySQL 8.0</text>
+  <text x="440" y="770" text-anchor="middle" font-size="11" fill="#7c2d12">InnoDB · ACID</text>
+
+  <!-- Legend / Red rules note -->
+  <rect x="20" y="700" width="220" height="100" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="130" y="720" text-anchor="middle" font-size="11" font-weight="700" fill="#7f1d1d">Red rules (PR rejected)</text>
+  <text x="32" y="738" font-size="9.5" fill="#7f1d1d">✗ Model.objects.* in controller</text>
+  <text x="32" y="752" font-size="9.5" fill="#7f1d1d">✗ Business logic in serializers</text>
+  <text x="32" y="766" font-size="9.5" fill="#7f1d1d">✗ Transactions opened in views</text>
+  <text x="32" y="780" font-size="9.5" fill="#7f1d1d">✗ ModelViewSet auto-CRUD</text>
+  <text x="32" y="794" font-size="9.5" fill="#7f1d1d">✗ Mutating closed work orders</text>
+</svg>
